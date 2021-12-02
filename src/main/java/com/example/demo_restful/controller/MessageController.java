@@ -1,67 +1,49 @@
 package com.example.demo_restful.controller;
 
-import com.example.demo_restful.exceptions.NotFoundException;
+import com.example.demo_restful.model.Message;
+import com.example.demo_restful.model.Views;
+import com.example.demo_restful.repository.MessageRepository;
+import com.fasterxml.jackson.annotation.JsonView;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/message")
+@RequiredArgsConstructor
 public class MessageController {
-    private int counter = 4;
-    private List<Map<String, String>> messages = new ArrayList<>() {{
-        add(new HashMap<String, String>() {{
-            put("id", "1");
-            put("text", "First message");
-        }});
-        add(new HashMap<String, String>() {{
-            put("id", "2");
-            put("text", "Second message");
-        }});
-        add(new HashMap<String, String>() {{
-            put("id", "3");
-            put("text", "Third message");
-        }});
-    }};
+    private final MessageRepository messageRepository;
 
     @GetMapping
-    public List<Map<String, String>> list() {
-        return messages;
+    @JsonView(Views.IdName.class)
+    public List<Message> list() {
+        return messageRepository.findAll();
     }
 
     @GetMapping("{id}")
-    public Map<String, String> getOneMessage(@PathVariable String id) {
-        return getMessageById(id);
-    }
-
-    private Map<String, String> getMessageById(String id) {
-        return messages.stream().filter(message -> message.get("id").equals(id))
-                .findFirst()
-                .orElseThrow(NotFoundException::new);
-    }
-
-    @PostMapping
-    public Map<String, String> createMessage(@RequestBody Map<String, String> message) {
-        message.put("id", String.valueOf(counter++));
-        messages.add(message);
+    public Message getOneMessage(@PathVariable("id") Message message) {
         return message;
     }
 
+
+    @PostMapping
+    public Message createMessage(@RequestBody Message message) {
+        message.setCreationDate(LocalDateTime.now());
+        return messageRepository.save(message);
+    }
+
     @PutMapping("{id}")
-    public Map<String, String> updateMessage(@PathVariable String id, @RequestBody Map<String, String> message) {
-        Map<String, String> messageFromDb = getMessageById(id);
-        messageFromDb.putAll(message);
-        messageFromDb.put("id", id);
-        return messageFromDb;
+    public Message updateMessage(@PathVariable("id") Message messageFromDb, @RequestBody Message message) {
+        BeanUtils.copyProperties(message, messageFromDb, "id");
+        return messageRepository.save(messageFromDb);
 
     }
 
     @DeleteMapping("{id}")
-    public void deleteMessage(@PathVariable String id){
-        Map<String, String> messageById = getMessageById(id);
-        messages.remove(messageById);
+    public void deleteMessage(@PathVariable("id") Message message) {
+        messageRepository.delete(message);
     }
 }
