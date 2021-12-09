@@ -1,4 +1,15 @@
+import Vue from 'vue'
+import App from 'pages/App.vue'
+import VueResource from 'vue-resource'
 
+Vue.use(VueResource)
+
+new Vue({
+    el: '#app',
+    render : a => a(App)
+})
+
+/*
 function getIndex(list, id){
     for (var i = 0; i < list.length; i++) {
         if (list[i].id === id) {
@@ -26,10 +37,7 @@ Vue.component('message-form', {
         }
     },
     template:
-        '<div>' +
-        '<input type="text" placeholder="Write something"  v-model="text"/>' +
-        '<input type="button" value="Save" @click="save"/>' +
-        '</div>',
+
     methods: {
         save: function () {
             var message = {text: this.text};
@@ -58,7 +66,7 @@ Vue.component('message-form', {
 
 
 Vue.component('message-row', {
-    props: ['message', 'editMethod', 'messages'],
+
     template: '<div>' +
         '<i>({{ message.id }})</i> {{ message.text }}' +
         '<span style="position: absolute; right: 0">' +
@@ -88,11 +96,6 @@ Vue.component('messages-list', {
         }
     },
     template:
-        '<div style="position: relative; width: 300px;">' +
-            '<message-form :messages ="messages" :messageAttr = "message"/>' +
-            '<message-row v-for="message in messages"  :key="message.id" :message="message" :editMethod="editMethod" :messages="messages"/>' +
-        '</div>',
-
     methods: {
         editMethod: function (message) {
             this.message = message;
@@ -103,21 +106,6 @@ Vue.component('messages-list', {
 var app = new Vue({
     el: '#app',
     template:
-    '</div>' +
-        '<div v-if="!profile">Необхожимо авторизоваться через <a href="/login">Google</a></div>' +
-        '<div v-else>' +
-            '<div>{{profile.name}}&nbsp;<a href="/logout">Выйти</a> </div>' +
-            '<messages-list :messages = "messages" />' +
-    '</div>',
-    data: {
-        messages: frontendData.messages,
-        profile: frontendData.profile
-    },
-    created: function () {
-        // messageApi.get().then(result =>
-        //     result.json().then(data =>
-        //         data.forEach(message => this.messages.push(message))
-        //     )
-        // )
-    },
-});
+
+
+});*/
