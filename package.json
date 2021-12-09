@@ -6,6 +6,8 @@
   "author": "k33rl <k.perevozov@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "@stomp/stompjs": "^6.1.2",
+    "sockjs-client": "^1.5.2",
     "vue": "^2.6.14",
     "vue-resource": "^1.5.3"
   },
